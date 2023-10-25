@@ -30,13 +30,11 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       
-          - name: Set up Docker
-        uses: docker/setup-buildx-action@v1
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v1
 
-      - name: Build Docker Image
-        run: |
-          docker build -t nome_da_sua_imagem:latest .
-          docker push nome_da_sua_imagem:latest
-        env:
+    - name: Build Docker Image
+      run: docker build -t eduserve:latest .
+      env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
