@@ -1,0 +1,7 @@
+FROM openjdk:17
+
+COPY target/server-0.0.1-SNAPSHOT.jar /repo/local/webapps/
+
+EXPOSE 8081
+
+CMD ["java", "-jar", "/repo/local/webapps/server-0.0.1-SNAPSHOT.jar"]
