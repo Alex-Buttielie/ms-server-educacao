@@ -35,6 +35,3 @@ jobs:
 
     - name: Build Docker Image
       run: docker build -t eduserve:latest .
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
