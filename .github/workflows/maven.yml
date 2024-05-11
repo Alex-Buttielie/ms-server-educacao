@@ -27,6 +27,6 @@ jobs:
 
       - name: Build Docker Image
         run: | 
-          docker build -t alexbuttielie/ms-server:server-main -f Dockerfile-server
+          docker build -t alexbuttielie/ms-server:server-main -f Dockerfile-server  .
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker push alexbuttielie/ms-server:server-main
