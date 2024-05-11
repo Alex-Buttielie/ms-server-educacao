@@ -27,6 +27,6 @@ jobs:
 
     - name: Build Docker Image
       run: | 
-        docker build -t idpablo/education:serve-main -f Dockerfile-serve .
+        docker build -t alexbuttielie/ms-server:server-main -f Dockerfile-server
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push idpablo/education:serve-main
+        docker push idpablo/education:server-main
