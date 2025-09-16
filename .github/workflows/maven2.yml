@@ -1,0 +1,55 @@
+name: Java CI Serve Educacao
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t alexbuttielie/ms-server:server-main -f Dockerfile .
+          docker push alexbuttielie/ms-server:server-main
+
+      # --- Aqui começa o deploy manual ---
+      - name: Add SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+          chmod 600 id_rsa
+          mkdir -p ~/.ssh
+          echo -e "Host vps\n  HostName ${{ secrets.VPS_HOST }}\n  User root\n  Port 22022\n  IdentityFile $(pwd)/id_rsa\n  StrictHostKeyChecking no" > ~/.ssh/config
+
+      - name: Test SSH Connection
+        run: ssh vps "echo ? Conexão SSH funcionando"
+
+      - name: Deploy on VPS
+        run: |
+          ssh vps << 'EOF'
+          docker pull alexbuttielie/ms-server:server-main
+          docker stop eureka-server || true
+          docker rm eureka-server || true
+          docker run -d --name eureka-server -p 8081:8081 alexbuttielie/ms-server:server-main
+          EOF
