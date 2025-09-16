@@ -41,16 +41,9 @@ jobs:
           username: root
           port: 22022
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          port: 22022
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker pull alexbuttielie/ms-server:server-main
             docker stop eureka-server || true
             docker rm eureka-server || true
             docker run -d --name eureka-server -p 8081:8081 alexbuttielie/ms-server:server-main
-
+      
