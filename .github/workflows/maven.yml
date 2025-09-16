@@ -41,6 +41,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22022
           script: |
+            kubectl apply -f /root/ms-server-deployment.yaml
             kubectl set image deployment/ms-server \
               ms-server=alexbuttielie/ms-server:server-main \
               --namespace=default
+          
