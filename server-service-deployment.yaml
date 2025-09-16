@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image: ms-server
+          image: alexbuttielie/ms-server:server-main
           imagePullPolicy: Never
           ports:
             - containerPort: 8081
