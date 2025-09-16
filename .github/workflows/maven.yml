@@ -1,9 +1,10 @@
-name: Build and Deploy
+name: Java CI Serve Educacao
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
@@ -29,8 +30,9 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and Push Docker Image
-        run: docker build -t alexbuttielie/ms-server:server-main -f Dockerfile .
-        run: docker push alexbuttielie/ms-server:server-main
+        run: |
+          docker build -t alexbuttielie/ms-server:server-main -f Dockerfile .
+          docker push alexbuttielie/ms-server:server-main
 
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v0.1.10
