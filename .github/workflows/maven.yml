@@ -41,6 +41,7 @@ jobs:
           username: root
           port: 22022
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          fingerprint: "ignore"
           script: |
             docker pull alexbuttielie/ms-server:server-main
             docker stop eureka-server || true
