@@ -34,22 +34,16 @@ jobs:
           docker build -t alexbuttielie/ms-server:latest -f Dockerfile .
           docker push alexbuttielie/ms-server:latest
 
-      # --- Aqui começa o deploy manual ---
-      - name: Add SSH key
+      - name: Set up Kubeconfig
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-          chmod 600 id_rsa
-          mkdir -p ~/.ssh
-          echo -e "Host vps\n  HostName ${{ secrets.VPS_HOST }}\n  User deploy\n  Port 22022\n  IdentityFile $(pwd)/id_rsa\n  StrictHostKeyChecking no" > ~/.ssh/config
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+          kubectl cluster-info
 
-      - name: Test SSH Connection
-        run: ssh vps "echo ? Conexão SSH funcionando"
-
-      - name: Deploy on VPS
+      - name: Deploy Eureka Server
         run: |
-          ssh vps << 'EOF'
-          docker pull alexbuttielie/ms-server:latest
-          docker stop eureka-server || true
-          docker rm eureka-server || true
-          docker run -d --name eureka-server -p 8081:8081 alexbuttielie/ms-server:latest
-          EOF
+          IMAGE=alexbuttielie/ms-server:latest
+          kubectl apply -f k8s/eureka-server.yaml
+          kubectl set image deployment/eureka-server eureka-server=$IMAGE
+          kubectl rollout status deployment/eureka-server --timeout=120s
