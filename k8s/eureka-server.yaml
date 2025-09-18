@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image: alexbuttielie/eureka-server:latest   # Troque pela sua imagem correta do Eureka Server
+          image: alexbuttielie/eureka-server:latest   # sua imagem
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
@@ -33,5 +33,4 @@ spec:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-      nodePort: 30001
-  type: NodePort
+  type: ClusterIP
