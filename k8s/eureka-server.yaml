@@ -34,4 +34,4 @@ spec:
       port: 8081
       targetPort: 8081
       nodePort: 30001
-  type: NodePort
+  type: ClusterIP
