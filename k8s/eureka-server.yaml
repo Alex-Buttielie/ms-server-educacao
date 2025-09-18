@@ -18,6 +18,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
+          env:
+            - name: EUREKA_SERVER_URL
+              value: "http://eureka-server:8081/eureka/"
 ---
 apiVersion: v1
 kind: Service
