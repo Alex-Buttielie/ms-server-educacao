@@ -46,4 +46,3 @@ jobs:
           IMAGE=alexbuttielie/ms-server:latest
           kubectl apply -f k8s/eureka-server.yaml
           kubectl set image deployment/eureka-server eureka-server=$IMAGE
-          kubectl rollout status deployment/eureka-server --timeout=120s
